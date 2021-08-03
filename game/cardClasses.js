@@ -92,6 +92,10 @@ class Shoe {
     this.buildShoe();
   }
 
+  length() {
+    return this.shoe.length;
+  }
+
   buildShoe() {
     for (let i = 0; i < 6; i++) {
       this.shoe.push((new Deck()).deck);
@@ -106,7 +110,7 @@ class Shoe {
   }
 
   draw() {
-    let idx = Math.floor(Math.random() * this.shoe.length);
+    let idx = Math.floor(Math.random() * this.length());
     let card = this.shoe.splice(idx, 1)[0];
 
     return card;
@@ -155,10 +159,9 @@ class Hand {
 }
 
 let testShoe = new Shoe();
+let j = testShoe.length();
+for (let i = 1 ; i < j; i++) { testShoe.draw() };
 console.log(testShoe);
-console.log(testShoe.shoe.length);
-console.log(testShoe.draw());
-console.log(testShoe);
-console.log(testShoe.shoe.length);
+console.log(testShoe.length());
 testShoe.reshuffle();
-console.log(testShoe.shoe.length);
+console.log(testShoe.length());
