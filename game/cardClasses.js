@@ -86,6 +86,33 @@ class Deck {
   }
 }
 
+class Shoe {
+  constructor() {
+    this.shoe = [];
+    this.buildShoe();
+  }
+
+  buildShoe() {
+    for (let i = 0; i < 6; i++) {
+      this.shoe.push((new Deck()).deck);
+    }
+
+    this.shoe = this.shoe.flat();
+  }
+
+  reshuffle() {
+    this.shoe = [];
+    this.buildShoe();
+  }
+
+  draw() {
+    let idx = Math.floor(Math.random() * this.shoe.length);
+    let card = this.shoe.splice(idx, 1)[0];
+
+    return card;
+  }
+}
+
 class Hand {
   constructor(bustValue) {
     this.cards = [];
@@ -126,3 +153,12 @@ class Hand {
     this.points = 0;
   }
 }
+
+let testShoe = new Shoe();
+console.log(testShoe);
+console.log(testShoe.shoe.length);
+console.log(testShoe.draw());
+console.log(testShoe);
+console.log(testShoe.shoe.length);
+testShoe.reshuffle();
+console.log(testShoe.shoe.length);
