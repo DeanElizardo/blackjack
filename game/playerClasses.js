@@ -1,5 +1,3 @@
-const readline = require('readline-sync');
-
 class Player {
   constructor(deck, bustValue) {
     this.score = 0;

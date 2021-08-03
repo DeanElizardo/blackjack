@@ -1,5 +1,3 @@
-const readline = require('readline-sync');
-
 class Card {
   constructor(identity) {
     Card.setSuit(this, identity);
