@@ -1,0 +1,7 @@
+{
+  TABLE_NAME: {
+    DEALER_UPCARD: {
+      PLAYER_HAND: function to call here.
+    }
+  }
+}
