@@ -99,7 +99,7 @@ class Shoe {
   }
 
   buildShoe() {
-    for (let i = 0; i < 6; i++) {
+    for (let idx = 0; idx < 6; idx++) {
       this.shoe.push((new Deck()).deck);
     }
 
@@ -159,3 +159,5 @@ class Hand {
     this.points = 0;
   }
 }
+
+module.exports = { Card, Deck, Shoe, Hand };
