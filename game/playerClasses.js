@@ -1,18 +1,15 @@
-class Player {
-  constructor(deck, bustValue) {
-    this.score = 0;
-    this.deck = deck;
-    this.hand = new Hand(bustValue);
-    this.dealIn();
-  }
+"use strict";
+const readline = require('readline-sync');
 
-  dealIn() {
-    this.hand.addCard(this.deck.draw());
-    this.hand.addCard(this.deck.draw());
+class Player {
+  constructor(shoe, bustValue) {
+    this.bankroll = 100;
+    this.shoe = shoe;
+    this.hand = new Hand(bustValue);
   }
 
   hit() {
-    this.hand.addCard(this.deck.draw());
+    this.hand.addCard(this.shoe.draw());
   }
 
   incrementScore() {
@@ -26,9 +23,23 @@ class Player {
   }
 }
 
+class MachinePlayer extends Player {
+  constructor(shoe, bustValue) {
+    super(shoe, bustValue);
+  }
+
+  isSoftTotal() {
+    return this.hand.cards[0].rank === 'A' || this.hand.cards[1].rank === 'A';
+  }
+
+  hit(dealerUpcard) {
+    // write basic strategy here
+  }
+}
+
 class Dealer extends Player {
-  constructor(deck, bustValue, pushValue) {
-    super(deck, bustValue);
+  constructor(shoe, bustValue, pushValue) {
+    super(shoe, bustValue);
     this.pushValue = pushValue;
   }
 
