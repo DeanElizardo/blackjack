@@ -1,3 +1,5 @@
+"use strict";
+
 class Card {
   constructor(identity) {
     Card.setSuit(this, identity);
@@ -157,11 +159,3 @@ class Hand {
     this.points = 0;
   }
 }
-
-let testShoe = new Shoe();
-let j = testShoe.length();
-for (let i = 1 ; i < j; i++) { testShoe.draw() };
-console.log(testShoe);
-console.log(testShoe.length());
-testShoe.reshuffle();
-console.log(testShoe.length());
