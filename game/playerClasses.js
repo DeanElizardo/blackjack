@@ -1,11 +1,12 @@
 "use strict";
-const readline = require('readline-sync');
+
+const CARD = require('./cardClasses.js');
 
 class Player {
   constructor(shoe, bustValue) {
     this.bankroll = 100;
     this.shoe = shoe;
-    this.hand = new Hand(bustValue);
+    this.hand = new (CARD.Hand)(bustValue);
   }
 
   hit() {
@@ -41,6 +42,8 @@ class Dealer extends Player {
   constructor(shoe, bustValue, pushValue) {
     super(shoe, bustValue);
     this.pushValue = pushValue;
+
+    delete this.bankroll;
   }
 
   hit() {
@@ -61,3 +64,5 @@ class Dealer extends Player {
     console.log("------------------------------------\n" + `Points: ${this.hand.points}`.padStart(36, ' ') + "\n------------------------------------");
   }
 }
+
+module.exports = { Player, MachinePlayer, Dealer };
