@@ -1,3 +1,4 @@
+"use strict";
 const readline = require('readline-sync');
 
 class Game {
@@ -5,9 +6,13 @@ class Game {
     this.bustValue = 21;
     this.pushValue = 17;
     this.matchScoreLimit = 5;
-    this.deck = new Deck();
+    this.shoe = new Shoe();
     this.player = new Player(this.deck, this.bustValue);
     this.dealer = new Dealer(this.deck, this.bustValue, this.pushValue);
+  }
+
+  deal() {
+    //add dealing mechanism here
   }
 
   reshuffle() {
@@ -106,18 +111,18 @@ class Game {
   }
 
   playRound() {
-    this.showHands();
-    while (this.hitOrStay(this.player)) {
-      this.showHands();
-      if (this.playerBusted(this.player)) {
-        break;
-      }
-    }
-    this.dealer.hit();
-    this.showScores();
-    this.dealer.showFullHand();
-    this.showHand(this.player);
-    this.determineWinner();
+    // this.showHands();
+    // while (this.hitOrStay(this.player)) {
+    //   this.showHands();
+    //   if (this.playerBusted(this.player)) {
+    //     break;
+    //   }
+    // }
+    // this.dealer.hit();
+    // this.showScores();
+    // this.dealer.showFullHand();
+    // this.showHand(this.player);
+    // this.determineWinner();
   }
 
   playMatch() {
