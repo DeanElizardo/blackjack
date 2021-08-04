@@ -1,22 +1,47 @@
 "use strict";
+
 const readline = require('readline-sync');
+const CARD = require('./cardClasses.js');
+const PARTICIPANT = require('./playerClasses.js');
+
 
 class Game {
   constructor() {
     this.bustValue = 21;
     this.pushValue = 17;
     this.matchScoreLimit = 5;
-    this.shoe = new Shoe();
-    this.player = new Player(this.deck, this.bustValue);
-    this.dealer = new Dealer(this.deck, this.bustValue, this.pushValue);
+    this.shoe = new (CARD.Shoe)();
+    this.seats = [];
+    this.fillSeats();
+  }
+
+  fillSeats() {
+    let humanSeat = Math.floor(Math.random() * 7);
+    for (let idx = 0; idx < 7; idx++) {
+      if (idx === humanSeat) {
+        this.seats[idx] = new (PARTICIPANT.Player)(this.shoe, this.bustValue);
+      } else {
+        this.seats[idx] =
+          new (PARTICIPANT.MachinePlayer)(this.shoe, this.bustValue);
+      }
+    }
+
+    this.seats
+      .push(
+        new (PARTICIPANT.Dealer)(this.shoe, this.bustValue, this.pushValue)
+      );
   }
 
   deal() {
-    //add dealing mechanism here
+    for (let count = 0; count < 2; count++) {
+      this.seats.forEach(participant => {
+        participant.hand.addCard(this.shoe.draw());
+      });
+    }
   }
 
   reshuffle() {
-    this.deck.reshuffle();
+    this.shoe.reshuffle();
   }
 
   showHand(player) {
@@ -111,7 +136,7 @@ class Game {
   }
 
   playRound() {
-    // this.showHands();
+    this.showHands();
     // while (this.hitOrStay(this.player)) {
     //   this.showHands();
     //   if (this.playerBusted(this.player)) {
@@ -168,3 +193,10 @@ class Game {
     console.log("Goodbye!");
   }
 }
+
+// test client
+let game = new Game();
+game.deal();
+game.seats.forEach(participant => {
+  console.log(participant.shoe === game.shoe);
+});
