@@ -7,15 +7,18 @@ class Player {
     this.bankroll = 100;
     this.shoe = shoe;
     this.hand = new (CARD.Hand)(bustValue);
+    this.header = this.writeHeader("You");
+  }
+
+  writeHeader(label) {
+    return label.padStart(label.length + ((24 - label.length) / 2), ' ').padEnd(24, ' ');
   }
 
   hit() {
     this.hand.addCard(this.shoe.draw());
   }
 
-  incrementScore() {
-    this.score++;
-  }
+  // TODO Add betting/bankroll methods here
 
   reset() {
     this.hand.resetHand();
@@ -27,6 +30,9 @@ class Player {
 class MachinePlayer extends Player {
   constructor(shoe, bustValue) {
     super(shoe, bustValue);
+    this.header = this.writeHeader('Machine Player');
+
+    delete this.bankroll;
   }
 
   isSoftTotal() {
@@ -42,8 +48,7 @@ class Dealer extends Player {
   constructor(shoe, bustValue, pushValue) {
     super(shoe, bustValue);
     this.pushValue = pushValue;
-
-    delete this.bankroll;
+    this.header = this.writeHeader("Dealer");
   }
 
   hit() {
