@@ -9,8 +9,8 @@ class Game {
   constructor() {
     this.bustValue = 21;
     this.pushValue = 17;
-    this.matchScoreLimit = 5;
     this.shoe = new (CARD.Shoe)();
+    this.reshuffleLimit = this.shoe.length() * (0.17);
     this.seats = [];
     this.fillSeats();
   }
@@ -44,30 +44,51 @@ class Game {
     this.shoe.reshuffle();
   }
 
-  showHand(player) {
-    console.log("====================================");
-    console.log(player.constructor.name.padStart(21, ' '));
-    console.log("====================================");
-    switch (player.constructor.name) {
-      case 'Player':
-        player.hand.cards.forEach(card => console.log(`${card.rank} of ${card.suit}`));
-        console.log("------------------------------------\n" + `Points: ${player.hand.points}`.padStart(36, ' ') + "\n------------------------------------");
-        break;
-      case 'Dealer':
-        console.log(player.hand.cards[0].rank + " of " + player.hand.cards[0].suit);
-        console.log("------------------------------------\n" + `Points: ${player.hand.cards[0].value}`.padStart(36, ' ') + "\n------------------------------------\n\n");
-        break;
-      default:
-        console.log("Object error in Game -> showHand()");
-        break;
+  prettyPrintHeaders() {
+    let headerString = '|';
+    this.seats.forEach(participant => {
+      if (participant.constructor.name !== 'Dealer') {
+        headerString += (participant.header + '|');
+      }
+    });
+
+    console.log(headerString);
+    console.log(('|' + '='.repeat(this.seats[0].header.length)).repeat(7) + '|');
+  }
+
+  prettyPrintHands(cardNumber = 0) {
+    let cardString = '|';
+    let stopString = (('|' + ' '.repeat(24)).repeat(7)) + '|';
+    this.seats.forEach(participant => {
+      if (participant.hand.cards.length > cardNumber && participant.constructor.name !== 'Dealer') {
+        cardString += ((participant.hand.cards[cardNumber].rank
+          + " of "
+          + participant.hand.cards[cardNumber].suit).padEnd(24, ' ')
+          + '|');
+      } else if (participant.constructor.name !== 'Dealer') {
+        cardString += (' '.repeat(24) + '|');
+      }
+    });
+
+    if (cardString === stopString) {
+      console.log(('|' + '_'.repeat(24)).repeat(7) + '|');
+    } else {
+      console.log(cardString);
+      this.prettyPrintHands(cardNumber + 1);
     }
   }
 
-  showHands() {
-    console.clear();
-    this.showScores();
-    this.showHand(this.dealer);
-    this.showHand(this.player);
+  showPlayerHands() {
+    this.prettyPrintHeaders();
+    this.prettyPrintHands();
+  }
+
+  showDealerUpcard() {
+    // TODO
+  }
+
+  showDealerHand() {
+    // TODO
   }
 
   hitOrStay(player) {
@@ -136,18 +157,7 @@ class Game {
   }
 
   playRound() {
-    this.showHands();
-    // while (this.hitOrStay(this.player)) {
-    //   this.showHands();
-    //   if (this.playerBusted(this.player)) {
-    //     break;
-    //   }
-    // }
-    // this.dealer.hit();
-    // this.showScores();
-    // this.dealer.showFullHand();
-    // this.showHand(this.player);
-    // this.determineWinner();
+    // TODO
   }
 
   playMatch() {
@@ -197,6 +207,4 @@ class Game {
 // test client
 let game = new Game();
 game.deal();
-game.seats.forEach(participant => {
-  console.log(participant.shoe === game.shoe);
-});
+game.showPlayerHands();
