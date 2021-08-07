@@ -54,7 +54,7 @@ class Dealer extends Player {
   hit() {
     if (this.hand.points < this.hand.bustValue) {
       while (this.hand.points < this.pushValue) {
-        this.hand.addCard(this.deck.draw());
+        this.hand.addCard(this.shoe.draw());
         this.hit();
       }
     }
