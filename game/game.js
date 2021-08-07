@@ -13,6 +13,7 @@ class Game {
     this.reshuffleLimit = this.shoe.length() * (0.17);
     this.seats = [];
     this.fillSeats();
+    this.timer = ms => new Promise(res => setTimeout(res, ms));
   }
 
   fillSeats() {
@@ -30,13 +31,19 @@ class Game {
       .push(
         new (PARTICIPANT.Dealer)(this.shoe, this.bustValue, this.pushValue)
       );
+
+    this.dealer = this.seats[this.seats.length - 1];
   }
 
-  deal() {
+  async deal() {
     for (let count = 0; count < 2; count++) {
-      this.seats.forEach(participant => {
-        participant.hand.addCard(this.shoe.draw());
-      });
+      for (let seatNumber = 0; seatNumber < this.seats.length; seatNumber++) {
+        this.seats[seatNumber].hand.addCard(this.shoe.draw());
+        await this.timer(1000);
+        console.clear();
+        this.showPlayerHands();
+        this.showDealerUpcard();
+      }
     }
   }
 
@@ -52,6 +59,7 @@ class Game {
       }
     });
 
+    console.log('_'.repeat(headerString.length));
     console.log(headerString);
     console.log(('|' + '='.repeat(this.seats[0].header.length)).repeat(7) + '|');
   }
@@ -60,12 +68,13 @@ class Game {
     let cardString = '|';
     let stopString = (('|' + ' '.repeat(24)).repeat(7)) + '|';
     this.seats.forEach(participant => {
-      if (participant.hand.cards.length > cardNumber && participant.constructor.name !== 'Dealer') {
+      // eslint-disable-next-line max-len
+      if (participant.hand.cards.length > cardNumber && participant !== this.dealer) {
         cardString += ((participant.hand.cards[cardNumber].rank
           + " of "
           + participant.hand.cards[cardNumber].suit).padEnd(24, ' ')
           + '|');
-      } else if (participant.constructor.name !== 'Dealer') {
+      } else if (participant !== this.dealer) {
         cardString += (' '.repeat(24) + '|');
       }
     });
@@ -83,12 +92,38 @@ class Game {
     this.prettyPrintHands();
   }
 
+  printDealerHeader() {
+    console.log(('+' + '-'.repeat(24) + '+').padStart(101, ' '));
+    console.log(('|' + this.dealer.header + '|').padStart(101, ' '));
+    console.log(('|' + '='.repeat(24) + '|').padStart(101, ' '));
+  }
+
   showDealerUpcard() {
-    // TODO
+    this.printDealerHeader();
+
+    this.dealer.hand.cards.forEach((card, idx) => {
+      if (!card) {
+        console.log(('|' + ' '.repeat(24) + '|').padStart(101, ' '));
+      } else if (idx === 1 && card) {
+        console.log(('|' + (card.rank + " of " + card.suit)
+          .padEnd(24, ' ') + '|').padStart(101, ' '));
+      } else {
+        console.log(('|' + " ***".padEnd(24, ' ') + '|').padStart(101, ' '));
+      }
+    });
+
+    console.log(('+' + '-'.repeat(24) + '+').padStart(101, ' '));
   }
 
   showDealerHand() {
-    // TODO
+    this.printDealerHeader();
+
+    this.dealer.hand.cards.forEach(card => {
+      console.log(('|' + (card.rank + " of " + card.suit)
+        .padEnd(24, ' ') + '|').padStart(101, ' '));
+    });
+
+    console.log('*'.repeat(26).padStart(101, ' '));
   }
 
   hitOrStay(player) {
@@ -161,50 +196,17 @@ class Game {
   }
 
   playMatch() {
-    while (this.player.score < this.matchScoreLimit
-      && this.dealer.score < this.matchScoreLimit) {
-      this.playRound();
-      this.player.hand.resetHand();
-      this.dealer.hand.resetHand();
-      this.reshuffle();
-      this.player.dealIn();
-      this.dealer.dealIn();
-    }
-  }
 
-  displayMatchWinner() {
-    this.showScores();
-    if (this.player.score === this.matchScoreLimit) {
-      console.log("Player wins the match!");
-    } else {
-      console.log("Dealer wins the match!");
-    }
-  }
-
-  playAgain() {
-    let choice;
-    do {
-      choice = readline.question("Would you like to play again? (Y/N): ").toLowerCase();
-    } while (!['y', 'n'].includes(choice));
-
-    return choice === 'y';
   }
 
   play() {
-    console.log("Welcome to the game of 21!");
-    readline.question("First player to win 5 hands wins the match. Press `Enter` when ready.");
-    do {
-      this.playMatch();
-      this.displayMatchWinner();
-      this.player.reset();
-      this.dealer.reset();
-    } while (this.playAgain());
-
-    console.log("Goodbye!");
+    this.deal();
+    this.showDealerHand();
   }
 }
 
 // test client
 let game = new Game();
-game.deal();
-game.showPlayerHands();
+game.play();
+
+//State of play: must learn how to program asynchronously
