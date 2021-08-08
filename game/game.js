@@ -69,10 +69,10 @@ class Game {
     let stopString = (('|' + ' '.repeat(24)).repeat(7)) + '|';
     this.seats.forEach(participant => {
       // eslint-disable-next-line max-len
-      if (participant.hand.cards.length > cardNumber && participant !== this.dealer) {
-        cardString += ((participant.hand.cards[cardNumber].rank
+      if (participant.cards().length > cardNumber && participant !== this.dealer) {
+        cardString += ((participant.cards()[cardNumber].rank
           + " of "
-          + participant.hand.cards[cardNumber].suit).padEnd(24, ' ')
+          + participant.cards()[cardNumber].suit).padEnd(24, ' ')
           + '|');
       } else if (participant !== this.dealer) {
         cardString += (' '.repeat(24) + '|');
@@ -101,7 +101,7 @@ class Game {
   showDealerUpcard() {
     this.printDealerHeader();
 
-    this.dealer.hand.cards.forEach((card, idx) => {
+    this.dealer.cards().forEach((card, idx) => {
       if (!card) {
         console.log(('|' + ' '.repeat(24) + '|').padStart(101, ' '));
       } else if (idx === 1 && card) {
@@ -118,7 +118,7 @@ class Game {
   showDealerHand() {
     this.printDealerHeader();
 
-    this.dealer.hand.cards.forEach(card => {
+    this.dealer.cards().forEach(card => {
       console.log(('|' + (card.rank + " of " + card.suit)
         .padEnd(24, ' ') + '|').padStart(101, ' '));
     });
@@ -150,45 +150,6 @@ class Game {
     }
 
     return false;
-  }
-
-  detectTie() {
-    if (this.player.hand.points > this.bustValue) {
-      if (this.dealer.hand.points > this.bustValue) {
-        readline.question("Tie! (Press `Enter` to continue)");
-      } else {
-        readline.question("Dealer Won! (Press `Enter` to continue)");
-        this.dealer.incrementScore();
-      }
-
-      return true;
-    }
-
-    return false;
-  }
-
-  determineWinner() {
-    debugger;
-    if (!this.detectTie()) {
-      if (this.player.hand.points > this.dealer.hand.points) {
-        readline.question("Player Won! (Press `Enter` to continue)");
-        this.player.incrementScore();
-      }
-      if (this.dealer.hand.points >= this.player.hand.points) {
-        if (this.dealer.hand.points > this.bustValue) {
-          readline.question("Player Won! (Press `Enter` to continue)");
-          this.player.incrementScore();
-        } else {
-          readline.question("Dealer Won! (Press `Enter` to continue)");
-          this.dealer.incrementScore();
-        }
-      }
-    }
-  }
-
-  showScores() {
-    console.clear();
-    console.log(`Dealer: ${this.dealer.score}` + '<|>'.padStart(10, ' ') + `        Player: ${this.player.score}`);
   }
 
   playRound() {

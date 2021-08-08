@@ -10,6 +10,10 @@ class Player {
     this.header = this.writeHeader("You");
   }
 
+  cards() {
+    return this.hand.cards;
+  }
+
   writeHeader(label) {
     return label.padStart(label.length + ((24 - label.length) / 2), ' ').padEnd(24, ' ');
   }
@@ -36,7 +40,7 @@ class MachinePlayer extends Player {
   }
 
   isSoftTotal() {
-    return this.hand.cards[0].rank === 'A' || this.hand.cards[1].rank === 'A';
+    return this.cards()[0].rank === 'A' || this.cards()[1].rank === 'A';
   }
 
   hit(dealerUpcard) {
@@ -65,7 +69,7 @@ class Dealer extends Player {
     console.log("====================================");
     console.log(this.constructor.name.padStart(21, ' '));
     console.log("====================================");
-    this.hand.cards.forEach(card => console.log(`${card.rank} of ${card.suit}`));
+    this.cards().forEach(card => console.log(`${card.rank} of ${card.suit}`));
     console.log("------------------------------------\n" + `Points: ${this.hand.points}`.padStart(36, ' ') + "\n------------------------------------");
   }
 }
