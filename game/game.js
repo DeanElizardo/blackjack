@@ -1,15 +1,15 @@
 "use strict";
 
 const readline = require('readline-sync');
-const CARD = require('./cardClasses.js');
-const PARTICIPANT = require('./playerClasses.js');
+const { Shoe } = require('./cardClasses.js');
+const { Player, MachinePlayer, Dealer } = require('./playerClasses.js');
 
 
 class Game {
   constructor() {
     this.bustValue = 21;
     this.pushValue = 17;
-    this.shoe = new (CARD.Shoe)();
+    this.shoe = new Shoe();
     this.reshuffleLimit = this.shoe.length() * (0.17);
     this.seats = [];
     this.fillSeats();
@@ -20,16 +20,16 @@ class Game {
     let humanSeat = Math.floor(Math.random() * 7);
     for (let idx = 0; idx < 7; idx++) {
       if (idx === humanSeat) {
-        this.seats[idx] = new (PARTICIPANT.Player)(this.shoe, this.bustValue);
+        this.seats[idx] = new Player(this.shoe, this.bustValue);
       } else {
         this.seats[idx] =
-          new (PARTICIPANT.MachinePlayer)(this.shoe, this.bustValue);
+          new MachinePlayer(this.shoe, this.bustValue);
       }
     }
 
     this.seats
       .push(
-        new (PARTICIPANT.Dealer)(this.shoe, this.bustValue, this.pushValue)
+        new Dealer(this.shoe, this.bustValue, this.pushValue)
       );
 
     this.dealer = this.seats[this.seats.length - 1];

@@ -1,12 +1,12 @@
 "use strict";
 
-const CARD = require('./cardClasses.js');
+const { Hand } = require('./cardClasses');
 
 class Player {
   constructor(shoe, bustValue) {
     this.bankroll = 100;
     this.shoe = shoe;
-    this.hand = new (CARD.Hand)(bustValue);
+    this.hand = new Hand(bustValue);
     this.header = this.writeHeader("You");
   }
 
